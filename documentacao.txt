@@ -1,0 +1,137 @@
+
+Todas informações são de acordo com o usuário de desktop, o mobile ainda não está pronto.
+
+No HTML: 
+- Tenho apenas uma folha de estilo com id
+- Tenho 2 script's JS carregados, sendo um com id e o outro o responsável por alterar as configurações e acordo com o tamanho da tela 
+(vai alterar qual .css deve ser carregado e qual script principal deve ser carregado)
+- Tenho um main com duas section
+- uma section é a lista de contatos, se localiza a esquerda da tela, tem uma div que é atualizada no main.js, que adiciona algo como '<div><p>contato.title<p><div>
+- na outra section, que ocupa quase 75% da tela, tenho um header com uma logo simples e 3 botões, "Criar", "editar" e "excluir", respectivamente
+- dentro dessa section tenho uma área em branco que quando clicado no botão, criar ou editar o JS imprime uma tela que pode ser preenchida com informações 
+
+CSS: 
+- A lista de contatos tem um height limitado, porém no JS quando ultrapassa 8 contatos ele altera para auto, ficando assim:
+#divListaCnt {
+    max-height: 800vh; 
+    height: auto;
+    overflow: auto;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+- Tentei usar vh em quase todos os elementos e quando não deu usei realmente px
+- usei display flex, row e column nos elementos 
+
+JS:
+(lembrando que esse projeto é somente com JS puro, sei que com react ficaria tudo mais facil e simples)
+(ordem no documebti e não cronologica)
+- Quando clicado no botão "Criar" lá da página ele chama a função screenComplete
+- Quando clicado no botão "Editar" la da página ele chama a função screenComplete com o parâmetro 'edit'
+- Quando clicado no botão "Excluir" la da página ele chama a função excluir que ainda não está criada e quero ajuda nela
+- Adicionei o evento de click no elementos filhos da 'divListaCnt' e passei a seguinte função anônima:
+function(e){
+    const el = e.target;
+    if (el.classList.contains('divctt') || el.classList.contains('pctt')) {
+        openCtt(el);
+    }
+- Criei uma váriavel com `let activeTool = 'create';`, que alterna entre 'create' e 'edit', dependendo de onde o usuário interagir
+- Declarei o array cttList, com `const cttList = [];`, que vai ter os objetos dos contatos e é ele quem eu pretendo salvar o LocalStorage
+- Criei a função limparScreen(), que vai limpar a section onde aparece o local de preencher as informações do novo usuário ou as informações do contato salvo
+- criei a função screenComplete da seguinte maneira:
+function screenComplete(status) {
+    if (status === 'edit') {
+        activeTool = 'edit';
+        criartela();
+        editarContato();
+    } else {
+        activeTool = 'create';
+        criartela();
+        criarcontato();
+    }
+}
+
+- criei a função criartela(), que preenche o section de input's, botão para limpar novamente a tela (sair), botão para criar o contato ou o botão de salvar e tal
+- no final da funçaão criartela(), tenho a seguinte condicional:
+if (activeTool === 'edit') {
+        const btnSave = document.createElement('button');
+        btnSave.setAttribute('id', 'btn-save');
+        btnSave.innerHTML = "Salvar"
+
+        divSpace2.appendChild(btnSave);
+
+    } else if (activeTool === 'create') {
+        const btnCreate = document.createElement('button');
+        btnCreate.setAttribute('id', 'btn-create');
+        btnCreate.innerHTML = "Criar"
+
+        divSpace2.appendChild(btnCreate);
+    }
+- Criei a função criarcontato(), que chama a função limparScreen() e criartela() e depois:
+limparScreen();
+    criartela();
+    const closeP = document.querySelector('p#closeP');
+    closeP.addEventListener('click', limparScreen);
+    activeTool = 'create';
+
+    const btnCreate = document.querySelector('button#btn-create');
+    btnCreate.addEventListener('click', function() {
+        objectPlusAtributes();   
+        porNaLista();
+    })
+- Depois declarei a função factory criaObjetoCtt(nome, sobrenome, job, cargo, email, phone), com tais parametros, da seguinte maneira:
+function criaObjetoCtt(nome, sobrenome, job, cargo, email, phone) {
+    const newCtt = {
+        tittle: `${nome} ${sobrenome}`,
+        nome: nome,
+        sobrenome: sobrenome,
+        job: job,
+        cargo: cargo,
+        email: email,
+        phone: phone
+    };
+
+    cttList.push(newCtt);
+}
+- Então declarei a função objectPlusAtributes(), que seleciona os elementos que serão lançados como argumentos para a função criaObjetoCtt e chama a função com tais elementos
+- declarei a função porNaLista(), que limpa a lista do documento HTML, lança um 'cttLista.sort(ordemAlfabetica)' (não vou abordar essa função, mas ela põe em ordem alfabetica os elementos)
+- tem um for da seguinte maneira:
+for(let ctt of cttList) {
+        const tittle = ctt.tittle;
+        const divCtt = document.createElement('div');
+        divCtt.classList.add('divctt');
+        const ptittle = document.createElement('p');
+        ptittle.classList.add('pctt');
+        ptittle.innerHTML = `${tittle}`;
+        divCtt.appendChild(ptittle);
+        divListaCnt.appendChild(divCtt);      
+    }
+    alterarHeight(); // vai testar e alterar aquele divListaCnt comentado lá em cima
+}
+- declarei a função openCtt(el), da seguinte maneira:
+activeTool = 'edit';
+    limparScreen();
+    criartela();
+
+    const objctTittle = el.innerHTML;
+    const objctFinded = cttList.find(function(ctt) {
+       return ctt.tittle === objctTittle; 
+    });
+- antes de terminar a função ele puxa as propriedades do objeto achado dentro do array e imprime elas nos input's impressos na tela
+- Função ordemAlfabetica e função alterarHeight; já comentadas
+- e as ultimas funções que estão em branco:
+function editarContato() {
+    objectPlusAtributes();   
+}
+
+function excluir() {
+    if (activeTool === 'edit') {
+        
+    }
+}
+
+
+
+
+
