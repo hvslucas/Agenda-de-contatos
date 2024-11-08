@@ -2,7 +2,7 @@
 
 - ### [:dart: Objetivo](#dart-objetivo-1)
 - ### [:gear: Como rodar](#gear-como-rodar-1)
-- ### [:arrow_down: Baixar o projeto](https://github.com/hvs/Agenda-de-contatos/archive/refs/heads/main.zip)
+- ### [:arrow_down: Baixar o projeto](https://github.com/hvslucas/Agenda-de-contatos/archive/refs/heads/main.zip)
 
 ## Projeto pessoal
 
